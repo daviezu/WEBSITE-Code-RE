@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Tech Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section id="home">
+        <h1>Couplers</h1>
+        <p>Code Reengineering - Smell and Refactoring</p>
+    </section>
+    <main>
+        <div>
+            <h2>Change Preventers</h2>
+            <p>Semua smell di dalam grup ini berkaitan dengan code yang mempersulit kita ketika ingin melakukan perubahan atau penambahan fitur.</p>
+            <ul>
+                <li><p><a href="#feature-envy">Feature Envy</a></p></li>
+                <li><p><a href="#inappropriate-intimacy">Inappropriate Intimacy</a></p></li>
+                <li><p><a href="#message-chains">Message Chains</a></p></li>
+                <li><p><a href="#middle-man">Middle Man</a></p></li>
+            </ul>
+            
+        </div>
+        <section id="feature-envy">
+            <h2>Feature Envy</h2>
+            <img src="https://refactoring.guru/images/refactoring/content/smells/feature-envy-01.png">
+            <h3>Penjelasan Smell</h3>
+            <p>Feature envy terjadi ketika sebuah metode pada sebuah kelas lebih tertarik pada data dari kelas lain daripada data miliknya sendiri. Hal ini menunjukkan bahwa metode seharusnya berada di kelas yang berbeda.</p>
+            <h3>Mengapa dan Kapan</h3>
+            <p>
+                Kita ingin menghindari feature envy karena itu mengurangi kohesi dan menyebabkan ketergantungan yang berlebihan. Idealnya, kita ingin memindahkan metode ke kelas yang lebih sesuai.
+            </p>
+            <h2>Code Example</h2>
+            <h4>Before</h4>
+            <pre>
+                <code class="language-javascript">
+public class Order {
+    private Customer customer;
+    
+    public String getCustomerCity() {
+        return customer.getAddress().getCity();
+    }
+}
+
+Order order = new Order();
+String customerCity = order.getCustomerCity();  
+                </code>
+            </pre>
+            <h4>After</h4>
+            <pre>
+                <code class="language-javascript">
+public class Customer {
+    private Address address;
+    
+    public String getCity() {
+        return address.getCity();
+    }
+}
+
+Customer customer = new Customer();
+String customerCity = customer.getCity();
+                </code>
+            </pre>
+        </section>
+        <section id="inappropriate-intimacy">
+            <h2>Inappropriate Intimacy</h2>
+            <img src="https://refactoring.guru/images/refactoring/content/smells/inappropriate-intimacy-01.png">
+            <h3>Penjelasan Smell</h3>
+            <p>Inappropriate intimacy terjadi ketika dua kelas terlalu tergantung satu sama lain dan berbagi terlalu banyak detail implementasi. Hal ini membuat kelas-kelas tersebut sulit untuk diubah secara independen.</p>
+            <h3>Mengapa dan Kapan</h3>
+            <p>
+                Kita ingin menghindari inappropriate intimacy karena itu mengurangi fleksibilitas dan menyulitkan perawatan kode. Idealnya, kita ingin membatasi hubungan yang tidak perlu antar kelas.
+            </p>
+            <h2>Code Example</h2>
+            <h4>Before</h4>
+            <pre>
+                <code class="language-javascript">
+public class Order {
+    private Customer customer;
+    
+    public double calculateTotalPrice() {
+        return customer.calculatePrice();
+    }
+}
+
+public class Customer {
+    private double price;
+    
+    public double calculatePrice() {
+        return price * 1.1; // Harga ditambah pajak
+    }
+}
+
+Order order = new Order();
+double totalPrice = order.calculateTotalPrice();
+                    
+                </code>
+            </pre>
+            <h4>After</h4>
+            <pre>
+                <code class="language-javascript">
+public class Order {
+    private double totalPrice;
+    
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+}
+
+Order order = new Order();
+double totalPrice = order.getTotalPrice();
+
+                </code>
+            </pre>
+        </section>
+        <section id="message-chains">
+            <h2>Message Chain</h2>
+            <img src="https://refactoring.guru/images/refactoring/content/smells/message-chains-01.png">
+            <h3>Penjelasan Smell</h3>
+            <p>Message chain terjadi ketika sebuah objek memanggil metode dari objek lain, yang kemudian memanggil metode objek lainnya lagi, dan seterusnya. Hal ini dapat menyebabkan ketergantungan yang kompleks antar objek.</p>
+            <h3>Mengapa dan Kapan</h3>
+            <p>
+                Kita ingin menghindari rantai pesan karena itu membuat kode sulit dipahami dan mengurangi fleksibilitas. Idealnya, kita ingin menggunakan desain yang lebih terpisah dan modular.
+            </p>
+            <h2>Code Example</h2>
+            <h4>Before</h4>
+            <pre>
+                <code class="language-javascript">
+String result = customer.getOrder().getAddress().getCity();
+                </code>
+            </pre>
+            <h4>After</h4>
+            <pre>
+                <code class="language-javascript">
+Order order = customer.getOrder();
+Address address = order.getAddress();
+String city = address.getCity();
+                </code>
+            </pre>
+        </section>
+        <section id="middle-man">
+            <h2>Middle Man</h2>
+            <img src="https://refactoring.guru/images/refactoring/content/smells/middle-man-01.png">
+            <h3>Penjelasan Smell</h3>
+            <p>Middle man terjadi ketika sebuah kelas hanya memanggil metode dari kelas lain tanpa melakukan tindakan apapun selain itu. Hal ini menyebabkan overhead yang tidak perlu</p>
+            <h3>Mengapa dan Kapan</h3>
+            <p>
+                Kita ingin menghindari middle man karena itu tidak efisien dan membingungkan. Idealnya, kita ingin memanggil metode langsung pada objek yang relevan.
+            </p>
+            <h2>Code Example</h2>
+            <h4>Before</h4>
+            <pre>
+                <code class="language-javascript">
+public class Order {
+    private Customer customer;
+    
+    public Customer getCustomer() {
+        return customer;
+    }
+}
+
+public class Customer {
+    private Order order;
+    
+    public Order getOrder() {
+        return order;
+    }
+}
+
+Customer customer = order.getCustomer();
+                </code>
+            </pre>
+            <h4>After</h4>
+            <pre>
+                <code class="language-javascript">
+Customer customer = order.getCustomer();
+                </code>
+            </pre>
+        </section>
+    </main>
+    <footer>
+        <p>© 2024. All rights reserved.</p>
+        <p>David</p>
+        <p>Zefanya Elizier M.S</p>
+    </footer>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+</body>
+</html>
